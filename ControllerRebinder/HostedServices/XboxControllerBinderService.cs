@@ -16,7 +16,7 @@ public class XboxControllerBinderService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await _binder.Start();
+        await _binder.Start(cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

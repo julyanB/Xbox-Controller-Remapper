@@ -2,7 +2,7 @@
 
 ## Installation
 ### Prerequisites
-- .NET 6 or later
+- .NET 9
 - Xbox controller (wired or wireless)
 
 ### Setup Instructions
@@ -27,9 +27,15 @@
    dotnet run --project ControllerRebinder
    ```
 
----
+## Getting Started
+1. Connect your Xbox controller via USB or Bluetooth.
+2. Run the project with:
+   ```sh
+   dotnet run --project ControllerRebinder
+   ```
+3. The app reads `ControllerRebinder/Configurations.json` on startup.
 
-## Configuration
+## Configuration Reference
 ### Editing `Configurations.json`
 Modify the `Configurations.json` file to adjust controller mappings and settings.
 
@@ -56,15 +62,22 @@ Example `Configurations.json`:
 }
 ```
 
+Key fields in this file include:
+- **RefreshRate**: number of milliseconds between controller polls.
+- **Log**: enables verbose logging of joystick values.
+- **LeftJoyStick** and **RightJoyStick**: specify thresholds and key mappings for each stick.
+- **Buttons**: maps controller buttons to keyboard keys.
+
 ---
 
-## Running the Application
+## Example Workflow
 Start the application with:
 ```sh
    dotnet run --project ControllerRebinder
 ```
-
-Once running, the application reads the configuration file and maps controller inputs to keyboard actions.
+1. Edit `ControllerRebinder/Configurations.json` to map buttons or adjust joystick thresholds.
+2. Launch the program and move the sticks or press buttons on your controller.
+3. Confirm that the expected keyboard keys are triggered.
 
 ---
 

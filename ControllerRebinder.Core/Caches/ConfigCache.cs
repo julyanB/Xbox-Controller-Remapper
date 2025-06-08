@@ -1,5 +1,5 @@
 ﻿using System;
-using ControllerRebinder.Common.Moddels.Configurations;
+using ControllerRebinder.Common.Models.Configurations;
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading;
@@ -29,7 +29,7 @@ namespace ControllerRebinder.Core.Caches
 
         public static async Task Refresh()
         {
-            var configurations = File.ReadAllText(PATH);
+            var configurations = await File.ReadAllTextAsync(PATH).ConfigureAwait(false);
             var tempConf = JsonConvert.DeserializeObject<Configurations>(configurations);
 
             Configurations.LeftJoyStick = tempConf.LeftJoyStick;

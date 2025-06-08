@@ -1,4 +1,4 @@
-﻿namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+﻿namespace ControllerRebinder.Common.Models.Configurations.SubModelsOfConfigurations;
 
 public class BaseJoyStick
 {

@@ -1,5 +1,5 @@
 ﻿using ControllerRebinder.Common.Enumerations;
-using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Common.Models.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Events.Versions.v03;
 using ControllerRebinder.Core.Helpers;
@@ -60,7 +60,7 @@ public class JoyStickService_v03 : IJoyStickService
                 var controllerState = _controller.GetState();
                 short stickX = 0, stickY = 0;
                 ChooseJoyStick(controllerState, ref stickX, ref stickY);
-                OnJoyStickMoved(stickX, stickY);
+                await OnJoyStickMoved(stickX, stickY).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -80,7 +80,7 @@ public class JoyStickService_v03 : IJoyStickService
             short stickY = 0;
 
             ChooseJoyStick(controllerState, ref stickX, ref stickY);
-            OnJoyStickMoved(stickX, stickY);
+            OnJoyStickMoved(stickX, stickY).GetAwaiter().GetResult();
         });
     }
 
@@ -99,9 +99,13 @@ public class JoyStickService_v03 : IJoyStickService
         }
     }
 
-    protected virtual void OnJoyStickMoved(int stickX, int stickY)
+    protected virtual async Task OnJoyStickMoved(int stickX, int stickY)
     {
-        JoyStickMoved?.Invoke(this, new JoyStickEventArgs_v03(stickX, stickY));
+        var handler = JoyStickMoved;
+        if (handler != null)
+        {
+            await handler(this, new JoyStickEventArgs_v03(stickX, stickY)).ConfigureAwait(false);
+        }
     }
 
     public void HandleException(Action action)

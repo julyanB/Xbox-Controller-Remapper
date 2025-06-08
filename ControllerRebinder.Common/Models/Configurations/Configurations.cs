@@ -1,6 +1,6 @@
-﻿using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+﻿using ControllerRebinder.Common.Models.Configurations.SubModelsOfConfigurations;
 
-namespace ControllerRebinder.Common.Moddels.Configurations
+namespace ControllerRebinder.Common.Models.Configurations
 {
     public class Configurations
     {
