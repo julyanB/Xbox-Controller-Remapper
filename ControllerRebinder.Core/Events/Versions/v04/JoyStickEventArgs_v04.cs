@@ -1,10 +1,11 @@
 ﻿using ControllerRebinder.Common.Enumerations;
-using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Common.Models.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 using WindowsInput;
 
 namespace ControllerRebinder.Core.Events.Versions.v04
@@ -21,7 +22,7 @@ namespace ControllerRebinder.Core.Events.Versions.v04
         }
     }
 
-    public delegate void JoyStickEventHandler_v04(object sender, JoyStickEventArgs_v04 e);
+    public delegate Task JoyStickEventHandler_v04(object sender, JoyStickEventArgs_v04 e);
 
     public class JoyStickHandler_v04
     {
@@ -45,7 +46,7 @@ namespace ControllerRebinder.Core.Events.Versions.v04
             joyStickService.JoyStickMoved += OnJoyStickMoved;
         }
 
-        private void OnJoyStickMoved(object sender, JoyStickEventArgs_v04 e)
+        private async Task OnJoyStickMoved(object sender, JoyStickEventArgs_v04 e)
         {
             var config = ConfigCache.Configurations.LeftJoyStick;
             double upDown = config.ForwardDown * AreaMultiplier;

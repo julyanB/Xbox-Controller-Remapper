@@ -1,6 +1,6 @@
 ﻿using ControllerRebinder.Common.Enumerations;
-using ControllerRebinder.Common.Moddels;
-using ControllerRebinder.Common.Moddels.Configurations;
+using ControllerRebinder.Common.Models;
+using ControllerRebinder.Common.Models.Configurations;
 using System.Collections.Generic;
 using WindowsInput.Native;
 

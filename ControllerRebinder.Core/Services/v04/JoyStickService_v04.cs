@@ -22,6 +22,7 @@ namespace ControllerRebinder.Core.Services
         private double _currentXArea;
 
         private Timer _timer;
+        private CancellationToken _cancellationToken;
 
         private const int AreaMultiplier = 10_000_000;
 
@@ -39,8 +40,9 @@ namespace ControllerRebinder.Core.Services
             _logger = logger;
         }
 
-        public async Task Start( CancellationToken cancellationToken = default)
+        public async Task Start(CancellationToken cancellationToken = default)
         {
+            _cancellationToken = cancellationToken;
             var config = ConfigCache.Configurations.LeftJoyStick;
 
             CircleHelper.FindArea(
@@ -51,6 +53,10 @@ namespace ControllerRebinder.Core.Services
                 out _staticYArea);
 
             _timer = new Timer(CheckJoystickState, null, 0, ConfigCache.Configurations.RefreshRate);
+            if (_cancellationToken.CanBeCanceled)
+            {
+                _cancellationToken.Register(() => _timer?.Dispose());
+            }
         }
 
         private void CheckJoystickState(object state)
@@ -62,7 +68,7 @@ namespace ControllerRebinder.Core.Services
                 short stickY = 0;
 
                 ChooseJoyStick(controllerState, ref stickX, ref stickY);
-                OnJoyStickMoved(stickX, stickY);
+                OnJoyStickMoved(stickX, stickY).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -84,9 +90,18 @@ namespace ControllerRebinder.Core.Services
             }
         }
 
-        protected virtual void OnJoyStickMoved(int stickX, int stickY)
+        protected virtual async Task OnJoyStickMoved(int stickX, int stickY)
         {
-            JoyStickMoved?.Invoke(this, new JoyStickEventArgs_v04(stickX, stickY));
+            var handler = JoyStickMoved;
+            if (handler != null)
+            {
+                await handler(this, new JoyStickEventArgs_v04(stickX, stickY)).ConfigureAwait(false);
+            }
+        }
+
+        public void Stop()
+        {
+            _timer?.Dispose();
         }
     }
 }

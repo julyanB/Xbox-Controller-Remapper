@@ -1,5 +1,5 @@
 ﻿using ControllerRebinder.Common.Enumerations;
-using ControllerRebinder.Common.Moddels;
+using ControllerRebinder.Common.Models;
 using System.Collections.Generic;
 
 namespace ControllerRebinder.Core.Helpers
@@ -63,7 +63,6 @@ namespace ControllerRebinder.Core.Helpers
             }
 
             return null;
-            ;
         }
     }
 }

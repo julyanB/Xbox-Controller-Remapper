@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Moddels\Configurations\SubModelsOfConfigurations\Versions\v04\" />
+    <Folder Include="Models\Configurations\SubModelsOfConfigurations\Versions\v04\" />
   </ItemGroup>
 
 </Project>

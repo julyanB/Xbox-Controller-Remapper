@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using WindowsInput.Native;
 
-namespace ControllerRebinder.Common.Moddels
+namespace ControllerRebinder.Common.Models
 {
     /// <summary>
     /// ZoneRanges Reprezents a specific zone in an Quadrant Upper, Middle, Lower

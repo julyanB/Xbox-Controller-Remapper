@@ -1,4 +1,4 @@
-﻿using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+﻿using ControllerRebinder.Common.Models.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using DXNET.XInput;

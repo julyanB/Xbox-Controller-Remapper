@@ -50,23 +50,23 @@ namespace ControllerRebinder.Core
             QuadrantCache.Init();
         }
 
-        private async Task ManageConnection()
+        private async Task ManageConnection(CancellationToken cancellationToken)
         {
             var tasks = new List<Task>();
 
             if (ConfigCache.Configurations.LeftJoyStick.On)
             {
-                tasks.Add(_leftJoyStickService.Start());
+                tasks.Add(_leftJoyStickService.Start(cancellationToken));
             }
 
             if (ConfigCache.Configurations.RightJoyStick.On)
             {
-                tasks.Add(_rightJoyStickService.Start());
+                tasks.Add(_rightJoyStickService.Start(cancellationToken));
             }
 
             if (ConfigCache.Configurations.Buttons.On)
             {
-                tasks.Add(_buttonsService.Start());
+                tasks.Add(_buttonsService.Start(cancellationToken));
             }
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -74,7 +74,7 @@ namespace ControllerRebinder.Core
 
         public async Task Start(CancellationToken cancellationToken = default)
         {
-            await ManageConnection();
+            await ManageConnection(cancellationToken).ConfigureAwait(false);
             Console.ReadLine();
         }
     }

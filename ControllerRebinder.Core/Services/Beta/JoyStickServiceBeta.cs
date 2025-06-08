@@ -1,7 +1,7 @@
 ﻿using ControllerRebinder.Common.Enumerations;
-using ControllerRebinder.Common.Moddels;
-using ControllerRebinder.Common.Moddels.Configurations;
-using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Common.Models;
+using ControllerRebinder.Common.Models.Configurations;
+using ControllerRebinder.Common.Models.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using DXNET.XInput;
@@ -123,7 +123,7 @@ namespace ControllerRebinder.Core.Services.Beta
             }
             else
             {
-                await ButtonHelper.PressButtons(_currentZone.Buttons);
+                ButtonHelper.PressButtons(_currentZone.Buttons);
                 ReleaseButtons = true;
             }
             //QuadrantChange ZoneChange
