@@ -3,6 +3,8 @@
 ## Installation
 ### Prerequisites
 - .NET 9
+- Node.js and npm
+- ElectronNET.CLI (`dotnet tool install -g ElectronNET.CLI`)
 - Xbox controller (wired or wireless)
 
 ### Setup Instructions
@@ -25,6 +27,20 @@
 5. Run the application:
    ```sh
    dotnet run --project ControllerRebinder
+   ```
+
+### Electron UI
+1. Restore dependencies:
+   ```sh
+   dotnet restore
+   ```
+2. Build the Electron front end:
+   ```sh
+   dotnet build ControllerRebinder.Ui/ControllerRebinder.Ui.csproj
+   ```
+3. Run the Electron app:
+   ```sh
+   electronize start -p ControllerRebinder.Ui/ControllerRebinder.Ui.csproj
    ```
 
 ## Getting Started

@@ -1,0 +1,145 @@
+@model ControllerRebinder.Ui.ViewModels.ConfigurationsViewModel
+
+<h2>Controller Configuration</h2>
+<form method="post">
+    <div>
+        <label>RefreshRate</label>
+        <input type="number" asp-for="Config.RefreshRate" />
+    </div>
+    <div>
+        <label>Log</label>
+        <input type="checkbox" asp-for="Config.Log" />
+    </div>
+    <h3>Left Joystick</h3>
+    <div>
+        <label>On</label>
+        <input type="checkbox" asp-for="Config.LeftJoyStick.On" />
+    </div>
+    <div>
+        <label>StaticArea</label>
+        <input asp-for="Config.LeftJoyStick.StaticArea" />
+    </div>
+    <div>
+        <label>ForwardDown</label>
+        <input asp-for="Config.LeftJoyStick.ForwardDown" />
+    </div>
+    <div>
+        <label>LeftRight</label>
+        <input asp-for="Config.LeftJoyStick.LeftRight" />
+    </div>
+    <div>
+        <label>DeadZone</label>
+        <input asp-for="Config.LeftJoyStick.DeadZone" />
+    </div>
+    <div>
+        <label>MaxValController</label>
+        <input asp-for="Config.LeftJoyStick.MaxValController" />
+    </div>
+    <div>
+        <label>ThreshHoldAreaCal</label>
+        <input asp-for="Config.LeftJoyStick.ThreshHoldAreaCal" />
+    </div>
+    <div>
+        <label>Up</label>
+        <input asp-for="Config.LeftJoyStick.Controlls.Up" />
+    </div>
+    <div>
+        <label>Down</label>
+        <input asp-for="Config.LeftJoyStick.Controlls.Down" />
+    </div>
+    <div>
+        <label>Left</label>
+        <input asp-for="Config.LeftJoyStick.Controlls.Left" />
+    </div>
+    <div>
+        <label>Right</label>
+        <input asp-for="Config.LeftJoyStick.Controlls.Right" />
+    </div>
+    <h3>Right Joystick</h3>
+    <div>
+        <label>On</label>
+        <input type="checkbox" asp-for="Config.RightJoyStick.On" />
+    </div>
+    <div>
+        <label>StaticArea</label>
+        <input asp-for="Config.RightJoyStick.StaticArea" />
+    </div>
+    <div>
+        <label>ForwardDown</label>
+        <input asp-for="Config.RightJoyStick.ForwardDown" />
+    </div>
+    <div>
+        <label>LeftRight</label>
+        <input asp-for="Config.RightJoyStick.LeftRight" />
+    </div>
+    <div>
+        <label>DeadZone</label>
+        <input asp-for="Config.RightJoyStick.DeadZone" />
+    </div>
+    <div>
+        <label>MaxValController</label>
+        <input asp-for="Config.RightJoyStick.MaxValController" />
+    </div>
+    <div>
+        <label>ThreshHoldAreaCal</label>
+        <input asp-for="Config.RightJoyStick.ThreshHoldAreaCal" />
+    </div>
+    <div>
+        <label>Up</label>
+        <input asp-for="Config.RightJoyStick.Controlls.Up" />
+    </div>
+    <div>
+        <label>Down</label>
+        <input asp-for="Config.RightJoyStick.Controlls.Down" />
+    </div>
+    <div>
+        <label>Left</label>
+        <input asp-for="Config.RightJoyStick.Controlls.Left" />
+    </div>
+    <div>
+        <label>Right</label>
+        <input asp-for="Config.RightJoyStick.Controlls.Right" />
+    </div>
+    <h3>Buttons</h3>
+    <div>
+        <label>On</label>
+        <input type="checkbox" asp-for="Config.Buttons.On" />
+    </div>
+    <div>
+        <label>X</label>
+        <input asp-for="Config.Buttons.X" />
+    </div>
+    <div>
+        <label>Y</label>
+        <input asp-for="Config.Buttons.Y" />
+    </div>
+    <div>
+        <label>A</label>
+        <input asp-for="Config.Buttons.A" />
+    </div>
+    <div>
+        <label>B</label>
+        <input asp-for="Config.Buttons.B" />
+    </div>
+    <div>
+        <label>DPadUp</label>
+        <input asp-for="Config.Buttons.DPadUp" />
+    </div>
+    <div>
+        <label>DPadDown</label>
+        <input asp-for="Config.Buttons.DPadDown" />
+    </div>
+    <div>
+        <label>DPadLeft</label>
+        <input asp-for="Config.Buttons.DPadLeft" />
+    </div>
+    <div>
+        <label>DPadRight</label>
+        <input asp-for="Config.Buttons.DPadRight" />
+    </div>
+    <button type="submit">Save</button>
+</form>
+@if (ViewBag.Message != null)
+{
+    <p>@ViewBag.Message</p>
+}
