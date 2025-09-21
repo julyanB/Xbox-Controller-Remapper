@@ -15,9 +15,13 @@ const logBuffer = [];
 const MAX_LOG_LINES = 500;
 
 const repoRoot = path.resolve(__dirname, '..', '..');
-const projectPath = path.resolve(repoRoot, 'ControllerRebinder', 'ControllerRebinder.TesterConsole.csproj');
+const projectRoot = app.isPackaged
+  ? path.resolve(process.resourcesPath, 'ControllerRebinder')
+  : path.resolve(repoRoot, 'ControllerRebinder');
+const projectPath = path.join(projectRoot, 'ControllerRebinder.TesterConsole.csproj');
 const projectWorkingDirectory = path.dirname(projectPath);
-const configPath = path.resolve(projectWorkingDirectory, 'Configurations.json');
+const configPath = path.join(projectWorkingDirectory, 'Configurations.json');
+const configTemplatePath = path.resolve(__dirname, 'default-configuration.json');
 
 let configWatcher;
 
@@ -38,8 +42,15 @@ async function ensureConfigFile() {
   try {
     await fsPromises.access(configPath, fs.constants.F_OK);
   } catch {
-    pushLog('error', `Configuration file not found at ${configPath}.`);
-    throw new Error('Configuration file not found.');
+    try {
+      await fsPromises.mkdir(projectWorkingDirectory, { recursive: true });
+      const template = await fsPromises.readFile(configTemplatePath, 'utf-8');
+      await fsPromises.writeFile(configPath, template, 'utf-8');
+      pushLog('warn', `Configuration file regenerated from template at ${configPath}.`);
+    } catch (error) {
+      pushLog('error', `Configuration file not found at ${configPath}.`);
+      throw new Error('Configuration file not found.');
+    }
   }
 }
 
@@ -102,13 +113,20 @@ function attachProcessListeners(child) {
   });
 }
 
-function startRemapperProcess() {
+async function startRemapperProcess() {
   if (remapperProcess) {
     setRemapperState({ status: 'running', detail: 'Controller remapper already running.' });
     return remapperState;
   }
 
   pushLog('info', 'Starting controller remapper process...');
+  if (!fs.existsSync(projectPath)) {
+    const message = 'Project file not found at ' + projectPath + '.';
+    pushLog('error', message);
+    throw new Error(message);
+  }
+  pushLog('info', 'Using project at ' + projectPath);
+  await ensureConfigFile();
 
   const child = spawn('dotnet', ['run', '--project', projectPath], {
     cwd: projectWorkingDirectory,
@@ -150,12 +168,13 @@ async function stopRemapperProcess() {
   });
 }
 
-function watchConfiguration() {
+async function watchConfiguration() {
   if (configWatcher) {
     return;
   }
 
   try {
+    await ensureConfigFile();
     configWatcher = fs.watch(configPath, { persistent: false }, async (eventType) => {
       if (eventType !== 'change') {
         return;
@@ -200,7 +219,7 @@ async function createWindow() {
     await mainWindow.loadFile(indexHtml);
   }
 
-  watchConfiguration();
+  await watchConfiguration();
   setRemapperState(remapperState);
 
   mainWindow.on('closed', () => {
@@ -257,9 +276,9 @@ ipcMain.handle('remapper:save-config', async (_event, payload) => {
   }
 });
 
-ipcMain.handle('remapper:start', () => {
+ipcMain.handle('remapper:start', async () => {
   try {
-    const state = startRemapperProcess();
+    const state = await startRemapperProcess();
     return { ok: true, state };
   } catch (error) {
     pushLog('error', error.message);
@@ -294,7 +313,4 @@ ipcMain.handle('system:reveal-config', async () => {
     return { ok: false, error: error.message };
   }
 });
-
-
-
 

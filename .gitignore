@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ControllerRebinder.Desktop artifacts
+ControllerRebinder.Desktop/dist/
+
