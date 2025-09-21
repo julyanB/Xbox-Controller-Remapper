@@ -1,62 +1,60 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using ControllerRebinder.Core;
-using ControllerRebinder.Core.Caches;
+﻿using ControllerRebinder.Core.Abstractions;
+using ControllerRebinder.Core.Adapters;
+using ControllerRebinder.Core.Configuration;
+using ControllerRebinder.Core.Services;
+using DXNET.XInput;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using WindowsInput;
 
-namespace ControllerRebinder.TesterConsole;
+var builder = Host.CreateApplicationBuilder(args);
 
-public class Program
+builder.Configuration.AddJsonFile(
+    "Configurations.json",
+    optional: false,
+    reloadOnChange: true);
+
+builder.Services.AddOptions<ControllerRemapperOptions>()
+    .Bind(builder.Configuration.GetSection(ControllerRemapperOptions.SectionName))
+    .ValidateOnStart();
+
+builder.Services.AddSingleton<IValidateOptions<ControllerRemapperOptions>, ControllerRemapperOptionsValidator>();
+
+builder.Services.AddSingleton<InputSimulator>();
+builder.Services.AddSingleton<IKeyboardEmulator, KeyboardSimulatorAdapter>();
+
+builder.Services.AddSingleton<IXboxController>(sp =>
 {
-    static async Task Main(string[] args)
+    var optionsMonitor = sp.GetRequiredService<IOptionsMonitor<ControllerRemapperOptions>>();
+    var controllerIndex = Math.Clamp(optionsMonitor.CurrentValue.ControllerIndex, 0, 3);
+    var userIndex = controllerIndex switch
     {
-        // Initialize configuration
-        try
-        {
-            await ConfigCache.InitAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading configuration: {ex.Message}");
-            return;
-        }
-    
-        var host = CreateHostBuilder(args).Build();
-        var serviceProvider = host.Services;
+        0 => UserIndex.One,
+        1 => UserIndex.Two,
+        2 => UserIndex.Three,
+        _ => UserIndex.Four
+    };
 
-        // Use cancellation token for graceful shutdown
-        using var cts = new CancellationTokenSource();
-        Console.CancelKeyPress += (s, e) =>
-        {
-            e.Cancel = true;
-            cts.Cancel();
-        };
+    return new XboxControllerAdapter(userIndex);
+});
 
-        // Use GetRequiredService to ensure the service is available
-        var controllerRebinder = serviceProvider.GetRequiredService<XboxControllerBinder>();
+builder.Services.AddHostedService<ControllerRemappingService>();
 
-        try
-        {
-            await controllerRebinder.Start(cts.Token).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException)
-        {
-            // Expected on cancellation; log or handle as needed
-        }
-    }
+builder.Logging.AddConsole();
 
+using var host = builder.Build();
 
-    static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureServices((_, services) => { services.ConfigureServices(); }).ConfigureLogging((_, logging) =>
-            {
-                if (ConfigCache.Configurations.Log)
-                {
-                    logging.ClearProviders();
-                    logging.AddConsole();
-                }
-            });
-}
+var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
+var bootstrapLogger = host.Services
+    .GetRequiredService<ILoggerFactory>()
+    .CreateLogger("ControllerRebinder");
+
+lifetime.ApplicationStarted.Register(() =>
+{
+    bootstrapLogger.LogInformation("Controller remapper running. Press Ctrl+C to exit.");
+});
+
+await host.RunAsync();

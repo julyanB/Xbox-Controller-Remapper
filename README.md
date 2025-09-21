@@ -1,97 +1,130 @@
-# Xbox Controller Remapper - Usage Instructions
+﻿# Xbox Controller Remapper
 
-## Installation
-### Prerequisites
-- .NET 9
+Production ready rewrite of the Xbox controller → keyboard remapper. The application is a generic host that continuously polls an Xbox controller and translates stick positions and button presses into keyboard events.
+
+## Prerequisites
+- Windows with XInput drivers
+- .NET 9 SDK
 - Xbox controller (wired or wireless)
 
-### Setup Instructions
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/julyan97/Xbox-Controller-Remapper.git
-   ```
-2. Navigate to the project directory:
-   ```sh
-   cd Xbox-Controller-Remapper
-   ```
-3. Restore dependencies:
-   ```sh
+## Quick Start
+1. Restore dependencies and build once:
+   `sh
    dotnet restore
-   ```
-4. Build the project:
-   ```sh
    dotnet build
-   ```
-5. Run the application:
-   ```sh
+   `
+2. Plug in / pair your controller.
+3. Run the remapper:
+   `sh
    dotnet run --project ControllerRebinder
-   ```
+   `
+4. Adjust bindings in ControllerRebinder/Configurations.json. Changes are picked up without restarting (except for ControllerIndex).
 
-## Getting Started
-1. Connect your Xbox controller via USB or Bluetooth.
-2. Run the project with:
-   ```sh
-   dotnet run --project ControllerRebinder
-   ```
-3. The app reads `ControllerRebinder/Configurations.json` on startup.
+Press Ctrl+C to stop the host.
 
-## Configuration Reference
-### Editing `Configurations.json`
-Modify the `Configurations.json` file to adjust controller mappings and settings.
+## Configuration
+All settings live under the ControllerRemapper section.
 
-Example `Configurations.json`:
-```json
+`json
 {
-  "RefreshRate": 10,
-  "Log": true,
-  "LeftJoyStick": {
-    "On": true,
-    "StaticArea": 0.5,
-    "ForwardDown": 1.0,
-    "LeftRight": 0.8,
-    "DeadZone": 1000,
-    "MaxValController": 32768,
-    "ThreshHoldAreaCal": 5000,
-    "Controlls": {
-      "Up": "VK_W",
-      "Down": "VK_S",
-      "Left": "VK_A",
-      "Right": "VK_D"
+  "ControllerRemapper": {
+    "RefreshRate": 8,
+    "Log": true,
+    "ControllerIndex": 0,
+    "LeftJoystick": {
+      "Enabled": true,
+      "ForwardDown": 23.9,
+      "LeftRight": 14.7,
+      "DeadZone": 21815,
+      "MaxValue": 32767,
+      "Threshold": 21815,
+      "Keys": {
+        "Up": "VK_W",
+        "Down": "VK_S",
+        "Left": "VK_A",
+        "Right": "VK_D"
+      }
+    },
+    "RightJoystick": {
+      "Enabled": false,
+      "ForwardDown": 23.9,
+      "LeftRight": 14.7,
+      "DeadZone": 21815,
+      "MaxValue": 32767,
+      "Threshold": 21815,
+      "Keys": {
+        "Up": "VK_I",
+        "Down": "VK_K",
+        "Left": "VK_J",
+        "Right": "VK_L"
+      }
+    },
+    "Buttons": {
+      "Enabled": false,
+      "Keys": {
+        "A": "SPACE",
+        "B": "VK_Q"
+      }
     }
   }
 }
-```
+`
 
-Key fields in this file include:
-- **RefreshRate**: number of milliseconds between controller polls.
-- **Log**: enables verbose logging of joystick values.
-- **LeftJoyStick** and **RightJoyStick**: specify thresholds and key mappings for each stick.
-- **Buttons**: maps controller buttons to keyboard keys.
+### Field Reference
+- RefreshRate: Polling interval in milliseconds (>=1).
+- Log: When 	rue, dumps joystick telemetry to the console.
+- ControllerIndex: 0‑3. Update requires an app restart.
+- *Joystick.ForwardDown / LeftRight: Area thresholds that control when diagonals become vertical or horizontal. Larger numbers tighten the zone.
+- DeadZone: Magnitude threshold before any key is pressed.
+- Threshold: Radius used for the area calculation (defaults to the Xbox thumbstick maximum of 21815).
+- Keys: Use VirtualKeyCode names (VK_W, SPACE, etc.).
+- Buttons.Keys: Map any subset of controller buttons; unmapped buttons are ignored.
 
----
+Validation runs at startup. Invalid bindings or malformed JSON stop the host with a helpful error.
 
-## Example Workflow
-Start the application with:
-```sh
-   dotnet run --project ControllerRebinder
-```
-1. Edit `ControllerRebinder/Configurations.json` to map buttons or adjust joystick thresholds.
-2. Launch the program and move the sticks or press buttons on your controller.
-3. Confirm that the expected keyboard keys are triggered.
-
----
+## Testing
+Execute the unit suite anytime:
+`sh
+dotnet test
+`
+The tests cover joystick quadrant handling, button translation, and keyboard state transitions.
 
 ## Troubleshooting
-### 1. No Key Presses Detected
-- Ensure the Xbox controller is connected.
-- Check logs for detected joystick movements.
-- Verify `Configurations.json` formatting and validity.
+- **No key events** → Verify the controller is reported as connected in logs and check the configured dead zone.
+- **Configuration reload errors** → Confirm the JSON is valid and that key names map to VirtualKeyCode values.
+- **Controller not found** → Adjust ControllerIndex (0 = first connected pad) and restart the app.
 
-### 2. Application Crashes on Startup
-- Confirm `Configurations.json` is correctly formatted.
-- Ensure all dependencies are installed.
-- Run in debug mode for detailed logs:
-  ```sh
-  dotnet run --project ControllerRebinder --configuration Debug
-  ```
+## Desktop Control Center
+The repository now ships with a desktop front end located in `ControllerRebinder.Desktop`. The Electron + React UI mirrors the JSON configuration, exposes live telemetry, and lets you launch or stop the remapper without touching the console.
 
+### Setup
+1. Install Node.js 18+ and npm.
+2. From `ControllerRebinder.Desktop`, install dependencies:
+   ```
+   npm install
+   ```
+3. (Optional) Build the .NET host once so runtime assets exist:
+   ```
+   dotnet build
+   ```
+4. Run the desktop workspace in development mode (Vite dev server + Electron shell):
+   ```
+   npm run dev
+   ```
+5. For a packaged build, emit static assets and launch Electron against them:
+   ```
+   npm run build
+   npm run start
+   ```
+
+### Highlights
+- Rich forms for controller index, refresh cadence, joystick thresholds, and button bindings with validation helpers.
+- Start/stop controls for the remapper host plus live status badges and telemetry streaming.
+- Automatic detection of external edits to `Configurations.json` with a prompt to reload the draft.
+- Quick links to open the configuration folder for manual inspection.
+
+The UI writes directly to `ControllerRebinder/Configurations.json`, so any changes remain compatible with the existing headless workflow.
+## Project Structure
+- ControllerRebinder.Core – remapping engine, options, services, and adapters.
+- ControllerRebinder – lightweight host wiring configuration and DI.
+- ControllerRebinder.Core.Tests – xUnit regression suite for the processing pipeline.
