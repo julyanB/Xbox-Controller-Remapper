@@ -1,0 +1,186 @@
+.joystick-visualizer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+}
+
+.joystick-visualizer__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.joystick-visualizer__title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.joystick-visualizer__subtitle {
+  font-size: 0.8rem;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.joystick-visualizer__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.85));
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  padding: 0.5rem;
+}
+
+.joystick-visualizer__canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.joystick-visualizer__segment {
+  transition: opacity 0.2s ease;
+  stroke: rgba(15, 23, 42, 0.45);
+  stroke-width: 1.25;
+  opacity: 0.85;
+}
+
+.joystick-visualizer__segment--horizontal {
+  fill: rgba(14, 165, 233, 0.55);
+}
+
+.joystick-visualizer__segment--diagonal {
+  fill: rgba(250, 204, 21, 0.55);
+}
+
+.joystick-visualizer__segment--vertical {
+  fill: rgba(248, 113, 113, 0.55);
+}
+
+.joystick-visualizer__ring {
+  fill: none;
+  stroke-width: 2;
+}
+
+.joystick-visualizer__ring--max {
+  stroke: rgba(148, 163, 184, 0.3);
+  stroke-dasharray: 6 6;
+}
+
+.joystick-visualizer__ring--threshold {
+  stroke: rgba(129, 140, 248, 0.85);
+  stroke-dasharray: 12 10;
+}
+
+.joystick-visualizer__deadzone {
+  fill: rgba(15, 23, 42, 0.7);
+  stroke: rgba(148, 163, 184, 0.55);
+  stroke-width: 2;
+}
+
+.joystick-visualizer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+}
+
+.joystick-visualizer__stats {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.joystick-visualizer__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+}
+
+.joystick-visualizer__stat dt {
+  margin: 0;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(148, 163, 184, 0.75);
+}
+
+.joystick-visualizer__stat dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #f8fafc;
+}
+
+.joystick-visualizer__legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: rgba(203, 213, 225, 0.8);
+}
+
+.joystick-visualizer__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.joystick-visualizer__chip {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(15, 23, 42, 0.6);
+}
+
+.joystick-visualizer__chip--horizontal {
+  background: rgba(14, 165, 233, 0.8);
+}
+
+.joystick-visualizer__chip--diagonal {
+  background: rgba(250, 204, 21, 0.8);
+}
+
+.joystick-visualizer__chip--vertical {
+  background: rgba(248, 113, 113, 0.8);
+}
+
+.joystick-visualizer__bindings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.joystick-visualizer__bindings li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  font-size: 0.85rem;
+}
+
+.joystick-visualizer__bindings li span:last-child {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+@media (max-width: 1024px) {
+  .joystick-visualizer__meta {
+    flex-direction: column;
+  }
+}

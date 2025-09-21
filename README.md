@@ -94,6 +94,36 @@ The tests cover joystick quadrant handling, button translation, and keyboard sta
 - **Configuration reload errors** → Confirm the JSON is valid and that key names map to VirtualKeyCode values.
 - **Controller not found** → Adjust ControllerIndex (0 = first connected pad) and restart the app.
 
+## Desktop Control Center
+The repository now ships with a desktop front end located in `ControllerRebinder.Desktop`. The Electron + React UI mirrors the JSON configuration, exposes live telemetry, and lets you launch or stop the remapper without touching the console.
+
+### Setup
+1. Install Node.js 18+ and npm.
+2. From `ControllerRebinder.Desktop`, install dependencies:
+   ```
+   npm install
+   ```
+3. (Optional) Build the .NET host once so runtime assets exist:
+   ```
+   dotnet build
+   ```
+4. Run the desktop workspace in development mode (Vite dev server + Electron shell):
+   ```
+   npm run dev
+   ```
+5. For a packaged build, emit static assets and launch Electron against them:
+   ```
+   npm run build
+   npm run start
+   ```
+
+### Highlights
+- Rich forms for controller index, refresh cadence, joystick thresholds, and button bindings with validation helpers.
+- Start/stop controls for the remapper host plus live status badges and telemetry streaming.
+- Automatic detection of external edits to `Configurations.json` with a prompt to reload the draft.
+- Quick links to open the configuration folder for manual inspection.
+
+The UI writes directly to `ControllerRebinder/Configurations.json`, so any changes remain compatible with the existing headless workflow.
 ## Project Structure
 - ControllerRebinder.Core – remapping engine, options, services, and adapters.
 - ControllerRebinder – lightweight host wiring configuration and DI.
