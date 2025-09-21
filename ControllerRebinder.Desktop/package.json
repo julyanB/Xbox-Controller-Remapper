@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "controllerrebinder-desktop",
   "version": "0.1.0",
   "private": true,
@@ -10,7 +10,9 @@
     "dev:electron": "wait-on http://localhost:5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron electron/main.js",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "start": "cross-env NODE_ENV=production electron electron/main.js"
+    "start": "cross-env NODE_ENV=production electron electron/main.js",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
   },
   "dependencies": {
     "electron-store": "^10.1.0",
@@ -27,6 +29,41 @@
     "electron": "^32.1.2",
     "typescript": "^5.4.5",
     "vite": "^4.5.3",
-    "wait-on": "^7.2.0"
-  }
+    "wait-on": "^7.2.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.controllerrebinder.desktop",
+    "directories": {
+      "buildResources": "electron/resources"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "index.html",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "../ControllerRebinder",
+        "to": "ControllerRebinder"
+      },
+      {
+        "from": "../ControllerRebinder.Core",
+        "to": "ControllerRebinder.Core"
+      },
+      {
+        "from": "../ControllerRebinder.Common",
+        "to": "ControllerRebinder.Common"
+      }
+    ]
+  },
+  "description": "Controller remapper desktop companion",
+  "author": "JB"
 }

@@ -1,0 +1,48 @@
+{
+  "ControllerRemapper": {
+    "RefreshRate": 8,
+    "Log": false,
+    "ControllerIndex": 0,
+    "LeftJoystick": {
+      "Enabled": true,
+      "ForwardDown": 23.9,
+      "LeftRight": 14.7,
+      "DeadZone": 21815,
+      "MaxValue": 32767,
+      "Threshold": 21815,
+      "Keys": {
+        "Up": "VK_W",
+        "Down": "VK_S",
+        "Left": "VK_A",
+        "Right": "VK_D"
+      }
+    },
+    "RightJoystick": {
+      "Enabled": false,
+      "ForwardDown": 23.9,
+      "LeftRight": 14.7,
+      "DeadZone": 21815,
+      "MaxValue": 32767,
+      "Threshold": 21815,
+      "Keys": {
+        "Up": "VK_I",
+        "Down": "VK_K",
+        "Left": "VK_J",
+        "Right": "VK_L"
+      }
+    },
+    "Buttons": {
+      "Enabled": false,
+      "Keys": {
+        "A": "VK_I",
+        "B": "VK_I",
+        "X": "VK_I",
+        "Y": "VK_I",
+        "DPadUp": "VK_I",
+        "DPadDown": "VK_I",
+        "DPadLeft": "VK_I",
+        "DPadRight": "VK_I"
+      }
+    }
+  }
+}
